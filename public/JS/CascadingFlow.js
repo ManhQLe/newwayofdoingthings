@@ -47,9 +47,12 @@ CascadingFlow.prototype.sendData = function (hub, data) {
     let idx = this.cascadingList.findIndex(function (e) {
         return hub === e.hub;
     })
-    let driverHubIdx = idx;
+    let driverHubIdx = -1;
     let notifiableHubs = []
-    let driverHubs = []
+    let driverElements = []
+
+    if(idx<0 && data===undefined)
+        return;
 
     if (idx >= 0) // Exists in cascading list
     {
@@ -70,17 +73,16 @@ CascadingFlow.prototype.sendData = function (hub, data) {
         driverHubIdx < 0 ? driverHubIdx = this.cascadingList.length - 1 : driverHubIdx;
     }
     else // Not yet there
-    {
-
-        driverHubIdx = -1;
-        this.cascadingList.push({ hub, data });
+    {   
+        driverHubIdx = this.cascadingList.length;     
+        this.cascadingList.push({ hub, data });        
     }
 
     //Get a list of driverHubs
     //driverHubs are hubs which participating in determining behaviors of notifiableHubs 
     this.cascadingList.every(function (e, i) {
         if (i <= driverHubIdx) {
-            driverHubs.push(e.hub)
+            driverElements.push(e)
             return true;
         }
         return false;
@@ -88,12 +90,12 @@ CascadingFlow.prototype.sendData = function (hub, data) {
 
     //Find the notifiableHubs
     this.hubs.forEach(function (h) {
-        if (!driverHubs.find(function (dh) {
+        if (!driverElements.find(function (dh) {
             return dh.hub === h
         })) notifiableHubs.push(h)
     })
 
-    this.__boardcastHub(driverHubs, notifiableHubs)
+    this.__boardcastHub(driverElements, notifiableHubs)
 }
 
 CascadingFlow.prototype.__boardcastHub = function (driverElements, notifiableHubs) {
