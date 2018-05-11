@@ -1,0 +1,23 @@
+{
+  "name": "newwayofdoingthings",
+  "version": "1.0.0",
+  "description": "New way of doing things",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "launch":"node src\\main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ManhQLe/newwayofdoingthings.git"
+  },
+  "author": "Manh Le",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ManhQLe/newwayofdoingthings/issues"
+  },
+  "homepage": "https://github.com/ManhQLe/newwayofdoingthings#readme",
+  "devDependencies": {
+    "live-server": "^1.2.0"
+  }
+}
