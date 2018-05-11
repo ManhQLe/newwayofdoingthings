@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Order</title>
+    <script src="/JS/CascadingFlow.js"></script>
+    <script type="text/javascript">
+        var CascadingEngine = new CascadingFlow({})
+        CascadingEngine.on("flowChanged", function (drivenElements, notifiableHubs) {
+            console.log(drivenElements)
+            console.log(notifiableHubs.map(x=>x.name))
+            console.log("--------------------")
+        });
+
+
+        var hub1 = CascadingEngine.createHub("Order1", function () {
+
+        })
+
+
+        function Order1() {
+            hub1.sendData("111" + Math.random());
+        }
+
+        function Order2() {
+            hub2.sendData("222" + Math.random());
+        }
+
+        function Order3() {
+            hub3.sendData("333" + Math.random());
+        }
+
+        function Order4() {
+            hub4.sendData("455" + Math.random());
+        }
+
+
+        function OrderClear1() {
+            hub1.clearData();
+        }
+
+        function OrderClear2() {
+            hub2.clearData();
+        }
+
+        function OrderClear3() {
+            hub3.clearData();
+        }
+
+        function OrderClear4() {
+            hub4.clearData();
+        }
+    </script>
+
+</head>
+
+<body>
+    <button onclick="Order1()">Order 1</button>
+    <button onclick="Order2()">Order 2</button>
+    <button onclick="Order3()">Order 3</button>
+    <button onclick="Order4()">Order 4</button>
+    <br/>
+    <button onclick="OrderClear1()">OrderClear 1</button>
+    <button onclick="OrderClear2()">OrderClear 2</button>
+    <button onclick="OrderClear3()">OrderClear 3</button>
+    <button onclick="OrderClear4()">OrderClear 4</button>
+</body>
+
+</html>

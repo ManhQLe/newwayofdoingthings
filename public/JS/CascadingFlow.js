@@ -3,9 +3,15 @@
 */
 
 function CascadingHub(name, cbfx, manager) {
-    this.name = name;
-    this.cbfx = cbfx;
+    this.name = name;    
     this.centralHub = manager;
+    this.event={
+        onDataReceived:cbfx?cbfx:function(){}
+    }
+}
+
+CascadingFlow.prototype.on = function(eventName,fx) {
+    fx?this.events[eventName] = fx:0;
 }
 
 CascadingHub.prototype.sendData = function (data) {
@@ -20,6 +26,9 @@ function CascadingFlow(init) {
     this.hubs = [];
     this.cascadingList = [];
     this.init = init;
+    this.events = {
+        flowChanged:function(){}
+    };
 }
 
 CascadingFlow.prototype.createHub = function (name, cbfx) {
@@ -38,7 +47,7 @@ CascadingFlow.prototype.sendData = function (hub, data) {
     let idx = this.cascadingList.findIndex(function (e) {
         return hub === e.hub;
     })
-    let driverHubIdx = -1;
+    let driverHubIdx = idx;
     let notifiableHubs = []
     let driverHubs = []
 
@@ -56,14 +65,15 @@ CascadingFlow.prototype.sendData = function (hub, data) {
             e.data = data;
         }
 
-        //Want to make sure if we remove top element then our driverHubs will be 
+        //Want to make sure if we remove top element then our driverHubs will 
         //start from 0 to end
-        driverHubIdx < 1 ? driverHubIdx = this.cascadingList.length - 1 : driverHubIdx;
+        driverHubIdx < 0 ? driverHubIdx = this.cascadingList.length - 1 : driverHubIdx;
     }
     else // Not yet there
     {
-        pivotHub = { hub, data }
-        this.cascadingList.push(pivotHub);
+
+        driverHubIdx = -1;
+        this.cascadingList.push({ hub, data });
     }
 
     //Get a list of driverHubs
@@ -83,14 +93,14 @@ CascadingFlow.prototype.sendData = function (hub, data) {
         })) notifiableHubs.push(h)
     })
 
-    this.broadcastHub(driverHubs, notifiableHubs)
+    this.__boardcastHub(driverHubs, notifiableHubs)
 }
 
-CascadingFlow.prototype.boardcastHub = function (driverElements, notifiableHubs) {
+CascadingFlow.prototype.__boardcastHub = function (driverElements, notifiableHubs) {
     ///TODOS
-    this.init.flowChanged(driverElements, notifiableHubs);
+    this.events.flowChanged(driverElements, notifiableHubs)
 }
 
 CascadingFlow.prototype.on = function (name, fx) {
-    this.init[name] = fx;
+    fx?this.events[name] = fx:0
 }
